@@ -3,6 +3,7 @@ from pydantic import BaseModel
 from pathlib import Path
 import pandas as pd
 import joblib
+import urllib.request
 
 
 # ==========================================
@@ -24,10 +25,14 @@ BASE_DIR = Path(__file__).resolve().parent
 
 MODEL_PATH = BASE_DIR / "readmission_model.joblib"
 
+MODEL_URL = "https://github.com/shouryanga-g1840/PS18-Hospital-Readmission-Prediction/releases/download/v1.0/readmission_model.joblib"
+
 if not MODEL_PATH.exists():
-    raise FileNotFoundError(
-        f"Model file not found: {MODEL_PATH}"
-    )
+    print("Downloading trained model from GitHub Release...")
+    urllib.request.urlretrieve(MODEL_URL, MODEL_PATH)
+
+if not MODEL_PATH.exists():
+    raise FileNotFoundError("Model download failed!")
 
 bundle = joblib.load(MODEL_PATH)
 
